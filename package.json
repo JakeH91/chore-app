@@ -6,9 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docker:up": "dotenv -e .env.local docker-compose up database",
+    "migrate": "dotenv -e .env.local -- prisma migrate dev",
+    "migrate:ci": "dotenv -e .env.local -- prisma migrate deploy",
+    "prisma:studio": "dotenv -e .env.local -- prisma studio"
   },
   "dependencies": {
+    "@prisma/client": "^5.13.0",
     "next": "14.2.2",
     "react": "^18",
     "react-dom": "^18"
@@ -18,9 +23,11 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@vitejs/plugin-react": "^4.2.1",
+    "dotenv-cli": "^7.4.1",
     "eslint": "^8",
     "eslint-config-next": "14.2.2",
     "postcss": "^8",
+    "prisma": "^5.13.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "vitest": "^1.5.0",
