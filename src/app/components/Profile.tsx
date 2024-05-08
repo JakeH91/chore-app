@@ -1,7 +1,7 @@
 'use client';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useEffect, useState } from 'react';
-import { addUserToDatabase, fetchUserFromDatabase } from '../actions/database';
+import { createDatabaseUser, readDatabaseUser } from '../actions/database/user';
 
 export default function Profile() {
   const { user: authUser, error, isLoading } = useUser();
@@ -13,7 +13,7 @@ export default function Profile() {
 
   useEffect(() => {
     async function fetchUser() {
-      const user = await fetchUserFromDatabase(authUser?.sub!);
+      const user = await readDatabaseUser(authUser?.sub!);
       setDatabaseUser(user);
       console.log('user:', user);
     }
@@ -27,7 +27,7 @@ export default function Profile() {
   useEffect(() => {
     (async () => {
       if (databaseUser === null && authUser?.sub && !isLoading && !error) {
-        await addUserToDatabase({
+        await createDatabaseUser({
           userId: authUser.sub,
           name: authUser.name!,
           email: authUser.email!,

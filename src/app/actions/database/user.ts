@@ -1,17 +1,7 @@
 'use server';
 import { prisma } from '@lib/prisma';
 
-export const fetchUserFromDatabase = async (userId: string) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
-
-  return user;
-};
-
-export const addUserToDatabase = async (user: {
+export const createDatabaseUser = async (user: {
   userId: string;
   name: string;
   email: string;
@@ -23,4 +13,14 @@ export const addUserToDatabase = async (user: {
       email: user.email,
     },
   });
+};
+
+export const readDatabaseUser = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  return user;
 };
