@@ -13,9 +13,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Chore {
-  id            Int  @id @default(autoincrement())
-  name          String
-  lastCompleted DateTime?
-  maxDaysSince  Int
+model User {
+  id      String  @id
+  name    String
+  email   String
 }
+
