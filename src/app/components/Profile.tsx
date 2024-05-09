@@ -15,14 +15,11 @@ export default function Profile() {
     async function fetchUser() {
       const user = await readDatabaseUser(authUser?.sub!);
       setDatabaseUser(user);
-      console.log('user:', user);
     }
     if (authUser) {
       fetchUser();
     }
   }, [authUser]);
-
-  console.log('auth user:', authUser);
 
   useEffect(() => {
     (async () => {
