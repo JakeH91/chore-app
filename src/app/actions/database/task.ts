@@ -19,7 +19,8 @@ export const createTask = async (userId: string, formData: FormData) => {
       ? new Date(String(taskData.dueDate))
       : undefined,
     repeating: isRepeating,
-    frequency: isRepeating ? +taskData.frequency : undefined,
+    frequency:
+      isRepeating && taskData.frequency ? +taskData.frequency : undefined,
   };
 
   await prisma.task.create({
