@@ -1,9 +1,30 @@
 'use client';
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { createTask } from '../actions/database/task';
+import { createTask, readTasks } from '../actions/database/task';
+import { useEffect, useState } from 'react';
 
 export default function Tasks() {
   const { user, error, isLoading } = useUser();
+  const [tasks, setTasks] = useState<
+    {
+      id: number;
+      name: string;
+      dueDate: Date | null;
+      repeating: boolean;
+      frequency: number | null;
+      userId: string;
+    }[]
+  >();
+
+  useEffect(() => {
+    async function fetchUser() {
+      const tasks = await readTasks(user?.sub!);
+      setTasks(tasks);
+    }
+    if (user) {
+      fetchUser();
+    }
+  }, [user]);
 
   const loadContent = () => {
     if (error) {
@@ -27,6 +48,19 @@ export default function Tasks() {
       return (
         <div>
           <h1>Hello {user?.name}</h1>
+          <h2>All tasks</h2>
+          {tasks?.map((task) => {
+            return (
+              <>
+                <h3>{task.name}</h3>
+                {task.dueDate ? (
+                  <p>Due Date: {task.dueDate.getDate()}</p>
+                ) : null}
+                {task.frequency ? <p>Frequency: {task.frequency}</p> : null}
+              </>
+            );
+          })}
+
           <form action={createTaskWithId}>
             <input type="text" name="name" required />
             <input type="date" name="dueDate" />
