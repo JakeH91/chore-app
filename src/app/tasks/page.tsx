@@ -1,10 +1,10 @@
 'use client';
-import { useUser } from '@auth0/nextjs-auth0/client';
-import { createTask, readTasks } from '../actions/database/task';
+import { createTask, readTasks } from '@app/actions/database/task';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Dropdown } from '../components/molecules/Dropdown';
 
 export default function Tasks() {
-  const { user, error, isLoading } = useUser();
   const [tasks, setTasks] = useState<
     {
       id: number;
@@ -17,51 +17,46 @@ export default function Tasks() {
   >();
 
   useEffect(() => {
-    async function fetchUser() {
-      const tasks = await readTasks(user?.sub!);
-      setTasks(tasks);
+    async function fetchTasks() {
+      const fetchedTasks = await readTasks();
+      setTasks(fetchedTasks);
     }
-    if (user) {
-      fetchUser();
-    }
-  }, [user]);
+    fetchTasks();
+  }, []);
 
   const loadContent = () => {
-    if (error) {
-      return <h1>SOMETHING WENT WRONG!!</h1>;
-    }
-
-    if (isLoading) {
-      return <h1>Loading...</h1>;
-    }
-
-    if (!user) {
-      return (
-        <div>
-          <h1>Hello World!</h1>
-        </div>
-      );
-    }
-
-    if (user && user.sub) {
-      const createTaskWithId = createTask.bind(null, user?.sub);
-      return (
-        <div>
-          <h1>Hello {user?.name}</h1>
-          <h2>All tasks</h2>
-          {tasks?.map((task) => {
-            return (
-              <>
-                <h3>{task.name}</h3>
-                {task.dueDate ? (
-                  <p>Due Date: {task.dueDate.getDate()}</p>
-                ) : null}
-                {task.frequency ? <p>Frequency: {task.frequency}</p> : null}
-              </>
-            );
-          })}
-
-          <form action={createTaskWithId}>
+    return (
+      <div>
+        <h1>All tasks</h1>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th className="border">Chore</th>
+              <th className="border">Next Due Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tasks?.map((task) => {
+              return (
+                <tr key={task.id}>
+                  <td className="border">
+                    <Dropdown />
+                  </td>
+                  <td className="border">
+                    <Link href={`/tasks/${task.id}`}>{task.name}</Link>
+                  </td>
+                  <td className="border">
+                    {task.dueDate ? task.dueDate.toDateString() : ''}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <div className="mt-20">
+          <h2>Add New Task?</h2>
+          <form action={createTask}>
             <input type="text" name="name" required />
             <input type="date" name="dueDate" />
             <fieldset>
@@ -81,8 +76,8 @@ export default function Tasks() {
             <button type="submit">Create Task</button>
           </form>
         </div>
-      );
-    }
+      </div>
+    );
   };
 
   return <main>{loadContent()}</main>;

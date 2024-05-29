@@ -1,7 +1,10 @@
 'use client';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useEffect, useState } from 'react';
-import { createDatabaseUser, readDatabaseUser } from '../actions/database/user';
+import {
+  createDatabaseUser,
+  readDatabaseUser,
+} from '../../actions/database/user';
 
 export default function Profile() {
   const { user: authUser, error, isLoading } = useUser();
@@ -32,10 +35,6 @@ export default function Profile() {
       }
     })();
   }, [databaseUser, authUser, isLoading, error]);
-
-  if (isLoading) {
-    return <p>{'Fetching User...'}</p>;
-  }
 
   return null;
 }
