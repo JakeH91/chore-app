@@ -35,7 +35,7 @@ model Task {
 model CompletionDetails {
   id        Int @id  @default(autoincrement())
   date      DateTime
-  timeTaken Int
+  timeTaken Int?
   task      Task  @relation(fields: [taskId], references: [id])
   taskId    Int
   users     User[]

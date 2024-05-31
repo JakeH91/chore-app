@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Icon } from '../../atoms/Icon';
+import { Icon } from '@app/components/atoms/Icon';
 
 export const Dropdown = () => {
   const [isShowingDropdown, setIsShowingDropdown] = useState(false);
