@@ -10,7 +10,10 @@ export default function SidebarItem({
   children: string;
 }) {
   const path = usePathname();
-  const selected = href.includes(path);
+  const firstPathSection = path.split('/')[1];
+  console.log(firstPathSection);
+
+  const selected = href.split('/')[1] === firstPathSection;
 
   return (
     <Link
