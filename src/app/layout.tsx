@@ -4,6 +4,7 @@ import { UserProvider } from '@auth0/nextjs-auth0/client';
 import './globals.css';
 import Profile from './components/organisms/Profile';
 import Link from 'next/link';
+import Sidebar from './components/organisms/Sidebar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,14 +23,7 @@ export default function RootLayout({
       <UserProvider>
         <body className={`${inter.className} flex flex-row h-screen`}>
           <Profile />
-          <aside className="flex flex-col w-60 border-r border-black h-full">
-            <Link className="p-4 w-full" href="/">
-              Home
-            </Link>
-            <Link className="p-4 w-full" href="/tasks">
-              Chores
-            </Link>
-          </aside>
+          <Sidebar />
           <main className="p-8">{children}</main>
         </body>
       </UserProvider>
