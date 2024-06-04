@@ -4,7 +4,13 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { completeTask } from '@app/actions/database/task';
 
-export const TableTask = ({ task }: { task: Task }) => {
+export const TableTask = ({
+  task,
+  noDate,
+}: {
+  task: Task;
+  noDate?: boolean;
+}) => {
   const [completed, setCompleted] = useState(false);
   const completeTaskWithId = completeTask.bind(null, task.id);
   return (
@@ -16,15 +22,18 @@ export const TableTask = ({ task }: { task: Task }) => {
             selected={completed}
             onClick={() => setCompleted((current) => !current)}
             type="submit"
+            title="submit"
           />
         </form>
       </td>
       <td className="border">
         <Link href={`/tasks/${task.id}`}>{task.name}</Link>
       </td>
-      <td className="border">
-        {task.dueDate ? task.dueDate.toDateString() : ''}
-      </td>
+      {noDate ? null : (
+        <td className="border">
+          {task.dueDate ? task.dueDate.toDateString() : ''}
+        </td>
+      )}
     </tr>
   );
 };

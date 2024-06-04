@@ -2,6 +2,7 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { prisma } from '@lib/prisma';
 import { CompletionDetails, Task } from '@prisma/client';
+import { addDays } from '@app/utils';
 
 export const createTask = async (formData: FormData) => {
   const session = await getSession();
@@ -51,13 +52,6 @@ export const readTask = async (taskId: number) => {
   }
 };
 
-const addDays = (date: Date, days: number | null) => {
-  if (days === null) days = 0;
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-};
-
 const formatTasks = (
   tasks: (Task & { completionDetails?: CompletionDetails[] })[]
 ): (Task & { completionDetails?: CompletionDetails[] })[] => {
@@ -65,8 +59,8 @@ const formatTasks = (
     .map((task) => {
       const completionDetails = task.completionDetails;
       const lastCompleted = completionDetails?.sort((detailsA, detailsB) => {
-        if (new Date(detailsA.date) < new Date(detailsB.date)) return -1;
-        else if (new Date(detailsA.date) > new Date(detailsB.date)) return 1;
+        if (new Date(detailsB.date) < new Date(detailsA.date)) return -1;
+        else if (new Date(detailsB.date) > new Date(detailsA.date)) return 1;
         else return 0;
       })[0];
       const nextDueDate = lastCompleted?.date
@@ -109,16 +103,15 @@ export const updateTask = async (taskId: number, formData: FormData) => {
   if (session && session.user) {
     const taskData = Object.fromEntries(formData);
     const isRepeating = taskData.repeating === 'true';
-    const task: Task = {
+    const task: Omit<Task, 'id' | 'userId'> = {
       name: String(taskData.name),
       dueDate: isRepeating
-        ? undefined
+        ? null
         : String(taskData.dueDate).length > 0
         ? new Date(String(taskData.dueDate))
-        : undefined,
+        : null,
       repeating: isRepeating,
-      frequency:
-        isRepeating && taskData.frequency ? +taskData.frequency : undefined,
+      frequency: isRepeating && taskData.frequency ? +taskData.frequency : null,
     };
 
     return await prisma.task.update({
