@@ -15,7 +15,7 @@ export const TableTask = ({
   const completeTaskWithId = completeTask.bind(null, task.id);
   return (
     <tr>
-      <td className="border">
+      <td className="p-1 pb-2">
         <form action={completeTaskWithId}>
           <Button
             icon="faCircleCheck"
@@ -26,12 +26,12 @@ export const TableTask = ({
           />
         </form>
       </td>
-      <td className="border">
+      <td className="px-4 pb-2">
         <Link href={`/tasks/${task.id}`}>{task.name}</Link>
       </td>
       {noDate ? null : (
-        <td className="border">
-          {task.dueDate ? task.dueDate.toDateString() : ''}
+        <td className="px-4 pb-2">
+          {task.dueDate ? task.dueDate.toLocaleDateString() : ''}
         </td>
       )}
     </tr>

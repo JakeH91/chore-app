@@ -3,7 +3,8 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import { useEffect, useState } from 'react';
 import { readTasks } from '@app/actions/database/task';
 import { addDays, isSameDay } from './utils';
-import { TableTask } from './components/organisms/TableTask';
+import { TableTask } from './components/molecules/TableTask';
+import { CollapsibleContent } from './components/organisms/CollapsibleContent';
 
 export default function Home() {
   const { user, error, isLoading } = useUser();
@@ -29,18 +30,18 @@ export default function Home() {
   const todaysDate = new Date();
 
   const filteredTasks = {
-    overdue:
+    top:
       tasks?.filter(
         (task) =>
           task.dueDate !== null &&
           !isSameDay(task.dueDate, todaysDate) &&
           task.dueDate < todaysDate
       ) ?? [],
-    dueToday:
+    high:
       tasks?.filter(
         (task) => task.dueDate !== null && isSameDay(task.dueDate, todaysDate)
       ) ?? [],
-    dueThreeDays:
+    low:
       tasks?.filter(
         (task) =>
           task.dueDate !== null &&
@@ -48,21 +49,21 @@ export default function Home() {
           task.dueDate > todaysDate &&
           task.dueDate < addDays(todaysDate, 3)
       ) ?? [],
-    dueThisWeek:
+    coming_up:
       tasks?.filter(
         (task) =>
           task.dueDate !== null &&
           !isSameDay(task.dueDate, todaysDate) &&
           task.dueDate > addDays(todaysDate, 3) &&
-          task.dueDate < addDays(todaysDate, 7)
+          task.dueDate < addDays(todaysDate, 6)
       ) ?? [],
   };
 
   const noTasks =
-    filteredTasks.overdue.length === 0 &&
-    filteredTasks.dueToday.length === 0 &&
-    filteredTasks.dueThreeDays.length === 0 &&
-    filteredTasks.dueThisWeek.length === 0;
+    filteredTasks.top.length === 0 &&
+    filteredTasks.high.length === 0 &&
+    filteredTasks.low.length === 0 &&
+    filteredTasks.coming_up.length === 0;
 
   if (error) {
     return <h1>SOMETHING WENT WRONG!!</h1>;
@@ -78,55 +79,63 @@ export default function Home() {
 
   return (
     <>
-      <h1>Hello {user?.name}</h1>
+      <h1 className="mb-6">Your tasks</h1>
       {noTasks ? <p>No tasks this week!</p> : null}
-      {filteredTasks.overdue.length > 0 ? (
-        <>
-          <h2 className="pt-8">Overdue</h2>
+      {filteredTasks.top.length > 0 ? (
+        <CollapsibleContent
+          variant="red"
+          isShowing
+          title={`Top Priority: ${filteredTasks.top.length}`}
+        >
           <table>
             <tbody>
-              {filteredTasks.overdue.map((task) => {
+              {filteredTasks.top.map((task) => {
                 return <TableTask key={task.id} task={task} noDate />;
               })}
             </tbody>
           </table>
-        </>
+        </CollapsibleContent>
       ) : null}
-      {filteredTasks.dueToday.length > 0 ? (
-        <>
-          <h2 className="pt-8">Due Today</h2>
+      {filteredTasks.high.length > 0 ? (
+        <CollapsibleContent
+          variant="yellow"
+          title={`High Priority: ${filteredTasks.high.length}`}
+        >
           <table>
             <tbody>
-              {filteredTasks.dueToday.map((task) => {
+              {filteredTasks.high.map((task) => {
                 return <TableTask key={task.id} task={task} noDate />;
               })}
             </tbody>
           </table>
-        </>
+        </CollapsibleContent>
       ) : null}
-      {filteredTasks.dueThreeDays.length > 0 ? (
-        <>
-          <h2 className="pt-8">Due In Next Three Days</h2>
+      {filteredTasks.low.length > 0 ? (
+        <CollapsibleContent
+          variant="green"
+          title={`Low Priority: ${filteredTasks.low.length}`}
+        >
           <table>
             <tbody>
-              {filteredTasks.dueThreeDays.map((task) => {
+              {filteredTasks.low.map((task) => {
                 return <TableTask key={task.id} task={task} noDate />;
               })}
             </tbody>
           </table>
-        </>
+        </CollapsibleContent>
       ) : null}
-      {filteredTasks.dueThisWeek.length > 0 ? (
-        <>
-          <h2 className="pt-8">Due Later This Week</h2>
+      {filteredTasks.coming_up.length > 0 ? (
+        <CollapsibleContent
+          title={`Coming Up: ${filteredTasks.coming_up.length}`}
+        >
           <table>
             <tbody>
-              {filteredTasks.dueThisWeek.map((task) => {
-                return <TableTask key={task.id} task={task} noDate />;
+              {filteredTasks.coming_up.map((task) => {
+                return <TableTask key={task.id} task={task} />;
               })}
             </tbody>
           </table>
-        </>
+        </CollapsibleContent>
       ) : null}
     </>
   );

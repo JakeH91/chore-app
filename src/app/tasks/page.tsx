@@ -1,8 +1,7 @@
 'use client';
 import { createTask, readTasks } from '@app/actions/database/task';
 import { useEffect, useRef, useState } from 'react';
-import { TableTask } from '../components/organisms/TableTask';
-import { addDays } from '@app/utils';
+import { TableTask } from '../components/molecules/TableTask';
 
 export default function Tasks() {
   const [tasks, setTasks] = useState<
@@ -37,8 +36,8 @@ export default function Tasks() {
           <thead>
             <tr>
               <th></th>
-              <th className="border">Chore</th>
-              <th className="border">Due Date</th>
+              <th>Chore</th>
+              <th>Due Date</th>
             </tr>
           </thead>
           <tbody>

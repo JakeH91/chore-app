@@ -23,7 +23,7 @@ export default function RootLayout({
         <body className={`${inter.className} flex flex-row h-screen`}>
           <Profile />
           <Sidebar />
-          <main className="p-8">{children}</main>
+          <main className="p-8 w-4/5">{children}</main>
         </body>
       </UserProvider>
     </html>

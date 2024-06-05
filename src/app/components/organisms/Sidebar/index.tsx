@@ -6,7 +6,7 @@ export default function Sidebar() {
   const { user, isLoading } = useUser();
 
   return (
-    <nav className="flex flex-col w-60 p-1 border-r border-r-gray-200 shadow-lg h-full">
+    <nav className="flex flex-col w-1/5 p-1 border-r border-r-gray-200 shadow-lg h-full">
       <SidebarItem href="/">Home</SidebarItem>
       {!user || isLoading ? (
         <SidebarItem href="/api/auth/login">Login</SidebarItem>
