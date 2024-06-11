@@ -1,14 +1,15 @@
 import { Task } from '@prisma/client';
 import { Button } from '@app/components/atoms/Button';
-import Link from 'next/link';
 import { useState } from 'react';
 import { completeTask } from '@app/actions/database/task';
 
 export const TableTask = ({
   task,
+  handleClick,
   noDate,
 }: {
   task: Task;
+  handleClick?: (taskId: number) => void;
   noDate?: boolean;
 }) => {
   const [completed, setCompleted] = useState(false);
@@ -26,8 +27,11 @@ export const TableTask = ({
           />
         </form>
       </td>
-      <td className="px-4 pb-2">
-        <Link href={`/tasks/${task.id}`}>{task.name}</Link>
+      <td
+        className="px-4 pb-2"
+        onClick={() => (handleClick ? handleClick(task.id) : null)}
+      >
+        {task.name}
       </td>
       {noDate ? null : (
         <td className="px-4 pb-2">
