@@ -1,5 +1,5 @@
 'use client';
-import { readChores } from '@app/actions/database/task';
+import { readProjects } from '@app/actions/database/task';
 import { useEffect, useState } from 'react';
 import { TableTask } from '@app/components/molecules/TableTask';
 import { TitleWithButton } from '@app/components/molecules/TitleWithButton';
@@ -7,7 +7,7 @@ import { Table } from '@app/components/molecules/Table';
 import { InfoBar } from '@app/components/organisms/InfoBar';
 import { TaskForm } from '@app/components/molecules/TaskForm';
 
-export const Chores = () => {
+export const Projects = () => {
   const [tasks, setTasks] = useState<
     {
       id: number;
@@ -24,7 +24,7 @@ export const Chores = () => {
 
   useEffect(() => {
     async function fetchTasks() {
-      const fetchedTasks = await readChores();
+      const fetchedTasks = await readProjects();
       setTasks(fetchedTasks);
       setCreatingTask(false);
     }
@@ -43,17 +43,18 @@ export const Chores = () => {
     <div className="flex flex-row justify-between">
       <div className="w-fit">
         <TitleWithButton
-          title="All Chores"
+          title="All Projects"
           buttonClick={setShowAddNewSidebar}
           buttonText="Add New"
         />
-        <Table title="tasks" headings={['', 'Chore', 'Due Date']}>
+        <Table title="tasks" headings={['', 'Project', 'Due Date']}>
           {tasks?.map((task) => {
             return (
               <TableTask
                 key={task.id}
                 handleClick={handleTaskClick}
                 task={task}
+                noDate={!task.dueDate}
               />
             );
           })}
@@ -62,7 +63,7 @@ export const Chores = () => {
       {/* TODO: Refactor to handle all this with one InfoBar & TaskForm */}
       {showAddNewSidebar ? (
         <InfoBar handleCloseClick={() => setShowAddNewSidebar(false)}>
-          <TaskForm handleButtonClick={setCreatingTask} isRepeatingTask />
+          <TaskForm handleButtonClick={setCreatingTask} />
         </InfoBar>
       ) : null}
       {editTaskId ? (
@@ -77,4 +78,4 @@ export const Chores = () => {
   );
 };
 
-export default Chores;
+export default Projects;

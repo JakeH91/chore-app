@@ -68,10 +68,16 @@ const formatTasks = (
         : addDays(new Date(), task.frequency);
       return {
         ...task,
-        dueDate: task.dueDate ? task.dueDate : nextDueDate,
+        dueDate: task.dueDate
+          ? task.dueDate
+          : task.repeating
+          ? nextDueDate
+          : null,
       };
     })
     .sort((taskA, taskB) => {
+      if (!taskA.dueDate) return -1;
+      if (!taskB.dueDate) return -1;
       if (new Date(taskA.dueDate) < new Date(taskB.dueDate)) return -1;
       else if (new Date(taskA.dueDate) > new Date(taskB.dueDate)) return 1;
       else return 0;
@@ -94,6 +100,46 @@ export const readTasks = async () => {
     return formatTasks(tasks);
   } else {
     throw new Error('Must be logged in to read tasks');
+  }
+};
+
+export const readChores = async () => {
+  const session = await getSession();
+
+  if (session && session.user) {
+    const tasks = await prisma.task.findMany({
+      where: {
+        userId: session.user.sub,
+        repeating: true,
+      },
+      include: {
+        completionDetails: true,
+      },
+    });
+
+    return formatTasks(tasks);
+  } else {
+    throw new Error('Must be logged in to read chores');
+  }
+};
+
+export const readProjects = async () => {
+  const session = await getSession();
+
+  if (session && session.user) {
+    const tasks = await prisma.task.findMany({
+      where: {
+        userId: session.user.sub,
+        repeating: false,
+      },
+      include: {
+        completionDetails: true,
+      },
+    });
+
+    return formatTasks(tasks);
+  } else {
+    throw new Error('Must be logged in to read projects');
   }
 };
 

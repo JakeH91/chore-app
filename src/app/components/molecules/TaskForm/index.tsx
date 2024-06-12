@@ -5,7 +5,7 @@ import { useRef } from 'react';
 // TODO: Refactor to be more logic independant
 export const TaskForm = ({
   handleButtonClick,
-  isRepeatingTask = true,
+  isRepeatingTask = false,
   task,
 }: {
   handleButtonClick: (arg: boolean) => void;
@@ -25,13 +25,15 @@ export const TaskForm = ({
           inputRef.current?.focus();
         }}
       >
-        <input
-          id="true"
-          type="hidden"
-          name="repeating"
-          value="true"
-          defaultChecked
-        />
+        {task.repeating ? (
+          <input
+            id="true"
+            type="hidden"
+            name="repeating"
+            value="true"
+            defaultChecked
+          />
+        ) : null}
         <fieldset className="flex flex-col">
           <label htmlFor="name">Task Name:</label>
           <input
@@ -44,7 +46,6 @@ export const TaskForm = ({
             defaultValue={task.name}
           />
         </fieldset>
-
         {task.repeating ? (
           <fieldset className="flex flex-col">
             <label htmlFor="frequency">
@@ -65,7 +66,9 @@ export const TaskForm = ({
               className="border"
               type="date"
               name="dueDate"
-              defaultValue={String(task.dueDate)}
+              defaultValue={new Date(task?.dueDate ?? new Date())
+                .toISOString()
+                .slice(0, 10)}
             />
           </fieldset>
         )}
@@ -90,13 +93,15 @@ export const TaskForm = ({
         inputRef.current?.focus();
       }}
     >
-      <input
-        id="true"
-        type="hidden"
-        name="repeating"
-        value="true"
-        defaultChecked
-      />
+      {isRepeatingTask ? (
+        <input
+          id="true"
+          type="hidden"
+          name="repeating"
+          value="true"
+          defaultChecked
+        />
+      ) : null}
       <fieldset className="flex flex-col">
         <label htmlFor="name">Task Name:</label>
         <input

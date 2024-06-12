@@ -13,6 +13,7 @@ export const NavBar = () => {
       ) : (
         <>
           <NavBarItem href="/chores">Chores</NavBarItem>
+          <NavBarItem href="/projects">Projects</NavBarItem>
           <NavBarItem href="/api/auth/logout">Logout</NavBarItem>
         </>
       )}

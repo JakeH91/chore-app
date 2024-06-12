@@ -21,11 +21,13 @@ export const Home = () => {
 
   useEffect(() => {
     async function fetchTasks() {
-      const fetchedTasks = await readTasks();
-      setTasks(fetchedTasks);
+      if (user) {
+        const fetchedTasks = await readTasks();
+        setTasks(fetchedTasks);
+      }
     }
     fetchTasks();
-  }, []);
+  }, [user]);
 
   const todaysDate = new Date();
 
@@ -74,7 +76,7 @@ export const Home = () => {
   }
 
   if (!user) {
-    return <h1>Hello World!</h1>;
+    return <h1>Login to sort your life out</h1>;
   }
 
   return (
