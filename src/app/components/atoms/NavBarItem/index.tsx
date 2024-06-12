@@ -2,13 +2,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export default function SidebarItem({
+export const NavBarItem = ({
   href,
   children,
 }: {
   href: string;
   children: string;
-}) {
+}) => {
   const path = usePathname();
   const subDirectory = path.split('/')[1];
   const selected = href.split('/')[1] === subDirectory;
@@ -23,4 +23,4 @@ export default function SidebarItem({
       {children}
     </Link>
   );
-}
+};

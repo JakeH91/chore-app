@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import {
   createDatabaseUser,
   readDatabaseUser,
-} from '../../actions/database/user';
+} from '@app/actions/database/user';
 
-export default function Profile() {
+export const Profile = () => {
   const { user: authUser, error, isLoading } = useUser();
   const [databaseUser, setDatabaseUser] = useState<{
     id: string;
@@ -37,4 +37,4 @@ export default function Profile() {
   }, [databaseUser, authUser, isLoading, error]);
 
   return null;
-}
+};

@@ -2,11 +2,11 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useEffect, useState } from 'react';
 import { readTasks } from '@app/actions/database/task';
-import { addDays, isSameDay } from './utils';
-import { TableTask } from './components/molecules/TableTask';
-import { CollapsibleContent } from './components/organisms/CollapsibleContent';
+import { addDays, isSameDay } from '@app/utils';
+import { TableTask } from '@app/components/molecules/TableTask';
+import { CollapsibleContent } from '@app/components/organisms/CollapsibleContent';
 
-export default function Home() {
+export const Home = () => {
   const { user, error, isLoading } = useUser();
   const [tasks, setTasks] = useState<
     {
@@ -139,4 +139,6 @@ export default function Home() {
       ) : null}
     </>
   );
-}
+};
+
+export default Home;
