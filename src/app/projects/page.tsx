@@ -15,6 +15,7 @@ export const Projects = () => {
       dueDate: Date | null;
       repeating: boolean;
       frequency: number | null;
+      householdId: number | null;
       userId: string;
     }[]
   >();

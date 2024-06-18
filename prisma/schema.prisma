@@ -14,29 +14,42 @@ datasource db {
 }
 
 model User {
-  id              String  @id
-  name            String
-  email           String
-  tasksCreated    Task[]
-  tasksCompleted  CompletionDetails[]
+  id                String  @id
+  name              String
+  email             String
+  tasksCreated      Task[]
+  tasksCompleted    CompletionDetails[]
+  householdsCreated Household[]         @relation(name: "createdBy")
+  households        Household[]         @relation(name: "members")
+}
+
+model Household {
+  id        Int     @id  @default(autoincrement())
+  address   String
+  createdBy User    @relation(name: "createdBy", fields: [userId], references: [id])
+  userId    String
+  users     User[]  @relation(name: "members")
+  tasks     Task[]
 }
 
 model Task {
-  id                Int    @id  @default(autoincrement())
+  id                Int                 @id  @default(autoincrement())
   name              String
   dueDate           DateTime?
   repeating         Boolean
-  frequency         Int?
-  user              User  @relation(fields: [userId], references: [id])
+  frequency         Int?                
+  user              User                @relation(fields: [userId], references: [id])
   userId            String
+  household         Household?          @relation(fields: [householdId], references: [id])
+  householdId       Int?
   completionDetails CompletionDetails[]
 }
 
 model CompletionDetails {
-  id        Int @id  @default(autoincrement())
+  id        Int       @id  @default(autoincrement())
   date      DateTime
   timeTaken Int?
-  task      Task  @relation(fields: [taskId], references: [id])
+  task      Task      @relation(fields: [taskId], references: [id])
   taskId    Int
   users     User[]
 }

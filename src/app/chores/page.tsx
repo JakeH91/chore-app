@@ -15,6 +15,7 @@ export const Chores = () => {
       dueDate: Date | null;
       repeating: boolean;
       frequency: number | null;
+      householdId: number | null;
       userId: string;
     }[]
   >();

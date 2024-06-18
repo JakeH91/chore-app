@@ -14,6 +14,7 @@ export const NavBar = () => {
         <>
           <NavBarItem href="/chores">Chores</NavBarItem>
           <NavBarItem href="/projects">Projects</NavBarItem>
+          <NavBarItem href="/households">Households</NavBarItem>
           <NavBarItem href="/api/auth/logout">Logout</NavBarItem>
         </>
       )}
