@@ -21,12 +21,45 @@ export const createHousehold = async (formData: FormData) => {
   }
 };
 
-export const readHousehold = async (id: number) => {
-  const household = await prisma.household.findUnique({
-    where: {
-      id,
-    },
-  });
+export const readHouseholds = async () => {
+  const session = await getSession();
 
-  return household;
+  if (session && session.user) {
+    const household = await prisma.household.findMany({
+      where: {
+        users: {
+          some: {
+            id: session.user.sub,
+          },
+        },
+      },
+    });
+
+    return household;
+  } else {
+    throw new Error('Must be logged in to read households');
+  }
+};
+
+export const joinHousehold = async (formData: FormData) => {
+  const session = await getSession();
+
+  if (session && session.user) {
+    const taskData = Object.fromEntries(formData);
+    const joiningCode = String(taskData.joiningCode);
+    const household = await prisma.household.update({
+      where: {
+        joiningCode,
+      },
+      data: {
+        users: {
+          connect: { id: session.user.sub },
+        },
+      },
+    });
+
+    return household;
+  } else {
+    throw new Error('Must be logged in to join household');
+  }
 };

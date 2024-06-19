@@ -24,12 +24,13 @@ model User {
 }
 
 model Household {
-  id        Int     @id  @default(autoincrement())
-  address   String
-  createdBy User    @relation(name: "createdBy", fields: [userId], references: [id])
-  userId    String
-  users     User[]  @relation(name: "members")
-  tasks     Task[]
+  id          Int     @id  @default(autoincrement())
+  joiningCode String  @unique @default(cuid())
+  address     String
+  createdBy   User    @relation(name: "createdBy", fields: [userId], references: [id])
+  userId      String
+  users       User[]  @relation(name: "members")
+  tasks       Task[]
 }
 
 model Task {
