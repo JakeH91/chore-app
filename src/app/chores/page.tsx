@@ -6,22 +6,31 @@ import { TitleWithButton } from '@app/components/molecules/TitleWithButton';
 import { Table } from '@app/components/molecules/Table';
 import { InfoBar } from '@app/components/organisms/InfoBar';
 import { TaskForm } from '@app/components/molecules/TaskForm';
+import { Household, Task } from '@prisma/client';
+import { readHouseholds } from '@app/actions/database/household';
 
 export const Chores = () => {
-  const [tasks, setTasks] = useState<
-    {
-      id: number;
-      name: string;
-      dueDate: Date | null;
-      repeating: boolean;
-      frequency: number | null;
-      householdId: number | null;
-      userId: string;
-    }[]
-  >();
   const [showAddNewSidebar, setShowAddNewSidebar] = useState(false);
   const [creatingTask, setCreatingTask] = useState(false);
   const [editTaskId, setEditTaskId] = useState<number | undefined>(0);
+  const [households, setHouseholds] = useState<Household[]>();
+  const [tasks, setTasks] = useState<Task[]>();
+
+  useEffect(() => {
+    async function fetchHouseholds() {
+      const fetchedHouseholds = await readHouseholds();
+      setHouseholds(fetchedHouseholds);
+    }
+    fetchHouseholds();
+  }, []);
+
+  useEffect(() => {
+    async function fetchTasks(households?: Household[]) {
+      const fetchedTasks = await readChores(households);
+      setTasks(fetchedTasks);
+    }
+    fetchTasks(households);
+  }, [households]);
 
   useEffect(() => {
     async function fetchTasks() {

@@ -5,30 +5,33 @@ import { readTasks } from '@app/actions/database/task';
 import { addDays, isSameDay } from '@app/utils';
 import { TableTask } from '@app/components/molecules/TableTask';
 import { CollapsibleContent } from '@app/components/organisms/CollapsibleContent';
+import { readHouseholds } from '@app/actions/database/household';
+import { Household, Task } from '@prisma/client';
 
 export const Home = () => {
   const { user, error, isLoading } = useUser();
-  const [tasks, setTasks] = useState<
-    {
-      id: number;
-      name: string;
-      dueDate: Date | null;
-      repeating: boolean;
-      frequency: number | null;
-      householdId: number | null;
-      userId: string;
-    }[]
-  >();
+  const [households, setHouseholds] = useState<Household[]>();
+  const [tasks, setTasks] = useState<Task[]>();
 
   useEffect(() => {
-    async function fetchTasks() {
+    async function fetchHouseholds() {
       if (user) {
-        const fetchedTasks = await readTasks();
+        const fetchedHouseholds = await readHouseholds();
+        setHouseholds(fetchedHouseholds);
+      }
+    }
+    fetchHouseholds();
+  }, [user]);
+
+  useEffect(() => {
+    async function fetchTasks(households: Household[] | undefined) {
+      if (user) {
+        const fetchedTasks = await readTasks(households);
         setTasks(fetchedTasks);
       }
     }
-    fetchTasks();
-  }, [user]);
+    fetchTasks(households);
+  }, [user, households]);
 
   const todaysDate = new Date();
 

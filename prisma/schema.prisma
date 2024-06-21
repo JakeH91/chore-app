@@ -26,6 +26,7 @@ model User {
 model Household {
   id          Int     @id  @default(autoincrement())
   joiningCode String  @unique @default(cuid())
+  name        String
   address     String
   createdBy   User    @relation(name: "createdBy", fields: [userId], references: [id])
   userId      String

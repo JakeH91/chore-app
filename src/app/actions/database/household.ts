@@ -10,6 +10,7 @@ export const createHousehold = async (formData: FormData) => {
     return await prisma.household.create({
       data: {
         address: String(householdData.address),
+        name: String(householdData.name),
         userId: session.user.sub,
         users: {
           connect: { id: session.user.sub },

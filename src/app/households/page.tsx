@@ -7,10 +7,15 @@ import {
 import React, { useEffect, useState } from 'react';
 
 export const Households = () => {
-  const [households, setHouseholds] =
-    useState<
-      { id: number; joiningCode: string; address: string; userId: string }[]
-    >();
+  const [households, setHouseholds] = useState<
+    {
+      id: number;
+      joiningCode: string;
+      name: string;
+      address: string;
+      userId: string;
+    }[]
+  >();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFormSubmit = () => {
@@ -37,7 +42,8 @@ export const Households = () => {
               <div className="flex flex-row" key={`household-${household.id}`}>
                 <span className="mx-2">{index + 1}.</span>
                 <div>
-                  <span>{household.address}</span>
+                  <span className="block">{household.name}</span>
+                  <span className="block">{household.address}</span>
                   <span className="block">
                     Joining Code: {household.joiningCode}
                   </span>
@@ -78,6 +84,14 @@ export const Households = () => {
           className="flex flex-row items-center gap-4"
           action={createHousehold}
         >
+          <label htmlFor="name">Name:</label>
+          <input
+            className="border"
+            type="text"
+            id="name"
+            name="name"
+            required
+          />
           <label htmlFor="address">Address:</label>
           <input
             className="border"

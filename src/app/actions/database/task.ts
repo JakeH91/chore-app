@@ -1,7 +1,7 @@
 'use server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { prisma } from '@lib/prisma';
-import { CompletionDetails, Task } from '@prisma/client';
+import { CompletionDetails, Household, Task } from '@prisma/client';
 import { addDays } from '@app/utils';
 
 export const createTask = async (formData: FormData) => {
@@ -18,6 +18,7 @@ export const createTask = async (formData: FormData) => {
         ? new Date(String(taskData.dueDate))
         : null,
       repeating: isRepeating,
+      householdId: String(taskData.access) === 'self' ? null : +taskData.access,
       frequency: isRepeating && taskData.frequency ? +taskData.frequency : null,
     };
 
@@ -27,6 +28,7 @@ export const createTask = async (formData: FormData) => {
         dueDate: task.dueDate,
         repeating: task.repeating,
         frequency: task.frequency,
+        householdId: task.householdId,
         userId: session.user.sub,
       },
     });
@@ -84,13 +86,17 @@ const formatTasks = (
     });
 };
 
-export const readTasks = async () => {
+export const readTasks = async (households?: Household[]) => {
   const session = await getSession();
 
   if (session && session.user) {
+    const householdIds = households?.map((household) => household.id);
     const tasks = await prisma.task.findMany({
       where: {
-        userId: session.user.sub,
+        OR: [
+          { userId: session.user.sub },
+          { householdId: { in: householdIds } },
+        ],
       },
       include: {
         completionDetails: true,
@@ -103,14 +109,18 @@ export const readTasks = async () => {
   }
 };
 
-export const readChores = async () => {
+export const readChores = async (households?: Household[]) => {
   const session = await getSession();
 
   if (session && session.user) {
+    const householdIds = households?.map((household) => household.id);
     const tasks = await prisma.task.findMany({
       where: {
-        userId: session.user.sub,
         repeating: true,
+        OR: [
+          { userId: session.user.sub },
+          { householdId: { in: householdIds } },
+        ],
       },
       include: {
         completionDetails: true,
@@ -123,14 +133,18 @@ export const readChores = async () => {
   }
 };
 
-export const readProjects = async () => {
+export const readProjects = async (households?: Household[]) => {
   const session = await getSession();
 
   if (session && session.user) {
+    const householdIds = households?.map((household) => household.id);
     const tasks = await prisma.task.findMany({
       where: {
-        userId: session.user.sub,
         repeating: false,
+        OR: [
+          { userId: session.user.sub },
+          { householdId: { in: householdIds } },
+        ],
       },
       include: {
         completionDetails: true,
@@ -157,6 +171,7 @@ export const updateTask = async (taskId: number, formData: FormData) => {
         ? new Date(String(taskData.dueDate))
         : null,
       repeating: isRepeating,
+      householdId: String(taskData.access) === 'self' ? null : +taskData.access,
       frequency: isRepeating && taskData.frequency ? +taskData.frequency : null,
     };
 
@@ -169,6 +184,7 @@ export const updateTask = async (taskId: number, formData: FormData) => {
         dueDate: task.dueDate,
         repeating: task.repeating,
         frequency: task.frequency,
+        householdId: task.householdId,
         userId: session.user.sub,
       },
     });

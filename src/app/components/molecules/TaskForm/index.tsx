@@ -15,6 +15,8 @@ export const TaskForm = ({
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const households = [{ id: 4, name: 'Norway Home' }];
+
   if (task) {
     const updateTaskWithId = updateTask.bind(null, task.id);
     return (
@@ -116,7 +118,7 @@ export const TaskForm = ({
       {isRepeatingTask ? (
         <fieldset className="flex flex-col">
           <label htmlFor="frequency">
-            How often should this task be completed?
+            How often should this task be completed (in days)?
           </label>
           <input
             className="border"
@@ -131,6 +133,19 @@ export const TaskForm = ({
           <input className="border" type="date" name="dueDate" />
         </fieldset>
       )}
+      <fieldset className="flex flex-col">
+        <label htmlFor="access">Who is this task for?</label>
+        <select className="border" id="access" name="access" required>
+          {households.map((household) => {
+            return (
+              <option key="household" value={household.id}>
+                {household.name}
+              </option>
+            );
+          })}
+          <option value="self">{'Just Me'}</option>
+        </select>
+      </fieldset>
       <button
         className="w-max self-end py-2 px-4 border rounded text-sm text-white bg-green-600"
         onClick={() => handleButtonClick(true)}
