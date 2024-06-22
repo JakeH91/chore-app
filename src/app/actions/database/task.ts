@@ -19,6 +19,7 @@ export const createTask = async (formData: FormData) => {
         : null,
       repeating: isRepeating,
       householdId: String(taskData.access) === 'self' ? null : +taskData.access,
+      parentId: taskData.parentId ? +taskData.parentId : null,
       frequency: isRepeating && taskData.frequency ? +taskData.frequency : null,
     };
 
@@ -29,6 +30,7 @@ export const createTask = async (formData: FormData) => {
         repeating: task.repeating,
         frequency: task.frequency,
         householdId: task.householdId,
+        parentId: task.parentId,
         userId: session.user.sub,
       },
     });
@@ -187,6 +189,7 @@ export const updateTask = async (taskId: number, formData: FormData) => {
         : null,
       repeating: isRepeating,
       householdId: String(taskData.access) === 'self' ? null : +taskData.access,
+      parentId: taskData.parentId ? +taskData.parentId : null,
       frequency: isRepeating && taskData.frequency ? +taskData.frequency : null,
     };
 
@@ -200,6 +203,7 @@ export const updateTask = async (taskId: number, formData: FormData) => {
         repeating: task.repeating,
         frequency: task.frequency,
         householdId: task.householdId,
+        parentId: task.parentId,
         userId: session.user.sub,
       },
     });
