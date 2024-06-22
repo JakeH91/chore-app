@@ -97,6 +97,18 @@ export const readTasks = async (households?: Household[]) => {
           { userId: session.user.sub },
           { householdId: { in: householdIds } },
         ],
+        NOT: {
+          AND: [
+            { frequency: null },
+            {
+              NOT: {
+                completionDetails: {
+                  none: {},
+                },
+              },
+            },
+          ],
+        },
       },
       include: {
         completionDetails: true,
@@ -145,6 +157,9 @@ export const readProjects = async (households?: Household[]) => {
           { userId: session.user.sub },
           { householdId: { in: householdIds } },
         ],
+        completionDetails: {
+          none: {},
+        },
       },
       include: {
         completionDetails: true,
