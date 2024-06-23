@@ -26,7 +26,7 @@ export const readHouseholds = async () => {
   const session = await getSession();
 
   if (session && session.user) {
-    const household = await prisma.household.findMany({
+    const households = await prisma.household.findMany({
       where: {
         users: {
           some: {
@@ -36,7 +36,7 @@ export const readHouseholds = async () => {
       },
     });
 
-    return household;
+    return households;
   } else {
     throw new Error('Must be logged in to read households');
   }

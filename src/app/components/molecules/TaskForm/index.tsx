@@ -1,6 +1,7 @@
-import { Task } from '@prisma/client';
+import { Household, Task } from '@prisma/client';
 import { createTask, updateTask } from '@app/actions/database/task';
-import { RefObject, useRef, useState } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
+import { readHouseholds } from '@src/app/actions/database/household';
 
 // TODO: Refactor to be more logic independant
 export const TaskForm = ({
@@ -15,8 +16,15 @@ export const TaskForm = ({
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [numOfSubtasks, setNumOfSubtasks] = useState(0);
+  const [households, setHouseholds] = useState<Household[]>();
 
-  const households = [{ id: 4, name: 'Norway Home' }];
+  useEffect(() => {
+    async function fetchHouseholds() {
+      const fetchedHouseholds = await readHouseholds();
+      setHouseholds(fetchedHouseholds);
+    }
+    fetchHouseholds();
+  }, []);
 
   if (task) {
     const updateTaskWithId = updateTask.bind(null, task.id);
