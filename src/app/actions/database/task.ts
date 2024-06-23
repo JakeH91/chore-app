@@ -114,6 +114,7 @@ export const readTasks = async (households?: Household[]) => {
       },
       include: {
         completionDetails: true,
+        parentTask: true,
       },
     });
 
@@ -155,6 +156,7 @@ export const readProjects = async (households?: Household[]) => {
     const tasks = await prisma.task.findMany({
       where: {
         repeating: false,
+        parentId: null,
         OR: [
           { userId: session.user.sub },
           { householdId: { in: householdIds } },
@@ -165,6 +167,13 @@ export const readProjects = async (households?: Household[]) => {
       },
       include: {
         completionDetails: true,
+        subtasks: {
+          where: {
+            completionDetails: {
+              none: {},
+            },
+          },
+        },
       },
     });
 
