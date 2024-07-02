@@ -9,8 +9,8 @@ import { readHouseholds } from '@app/actions/database/household';
 import { Household, Task } from '@prisma/client';
 import { PageHeading } from '@app/components/atoms/PageHeading';
 import { PageContent } from '@app/components/atoms/PageContent';
-import Image from 'next/image';
-import { Icon } from './components/atoms/Icon';
+import { Icon } from '@app/components/atoms/Icon';
+import { ImageAndText } from '@app/components/molecules/ImageAndText';
 
 export const Home = () => {
   const { user, error, isLoading } = useUser();
@@ -94,53 +94,47 @@ export const Home = () => {
         <>
           {/* No chores coming up in the next week */}
           {noUpcomingTasks && tasks?.length && tasks.length > 0 ? (
-            <div className="relative h-[70vh]">
-              <div className="w-full relative h-1/2 overflow-hidden">
-                <Image
-                  className="pb-8"
-                  src="/relax.jpg"
-                  alt={'A man relaxing in a field'}
-                  fill
-                />
-              </div>
-              <span className="block w-100 text-justify">
-                {"Looks like you've got no more tasks for the week! Nice one."}
-              </span>
-
-              <span className="block w-100 text-justify mt-4">
-                {'If you really want something to do, press the '}
-                <Icon icon="faCalendar" variant="solid" />
-                {' or '}
-                <Icon icon="faClipboardList" variant="solid" />
-                {' icons in the navbar below to add some more '}
-                <em>{'fun'}</em>
-                {' to your life.'}
-              </span>
-            </div>
+            <ImageAndText
+              imgSrc="/relax.jpg"
+              imgAltText="A man relaxing in a field"
+            >
+              <>
+                <span className="block w-100 text-justify">
+                  {
+                    "Looks like you've got no more tasks for the week! Nice one."
+                  }
+                </span>
+                <span className="block w-100 text-justify mt-4">
+                  {'If you really want something to do, press the '}
+                  <Icon icon="faCalendar" variant="solid" />
+                  {' or '}
+                  <Icon icon="faClipboardList" variant="solid" />
+                  {' icons in the navbar below to add some more '}
+                  <em>{'fun'}</em>
+                  {' to your life.'}
+                </span>
+              </>
+            </ImageAndText>
           ) : null}
           {/* No chores exist at all */}
           {!tasks?.length || tasks.length === 0 ? (
-            <div className="relative h-[70vh]">
-              <div className="w-full relative h-1/2 overflow-hidden">
-                <Image
-                  className="pb-8"
-                  src="/emptyTodo.jpg"
-                  alt={'An empty todo list'}
-                  fill
-                />
-              </div>
-              <span className="block w-100 text-justify">
-                {
-                  "It seems you're the first one here! Why not add some chores to the household, for the lazy bastards you're living with to get on with."
-                }
-              </span>
-
-              <span className="block w-100 text-justify mt-4">
-                {'Press the '}
-                <Icon icon="faCalendar" variant="solid" />
-                {' icon in the navbar below to get started.'}
-              </span>
-            </div>
+            <ImageAndText
+              imgSrc="/emptyTodo.jpg"
+              imgAltText="An empty todo list"
+            >
+              <>
+                <span className="block w-100 text-justify">
+                  {
+                    "It seems you're the first one here! Why not add some chores to the household, for the lazy bastards you're living with to get on with."
+                  }
+                </span>
+                <span className="block w-100 text-justify mt-4">
+                  {'Press the '}
+                  <Icon icon="faCalendar" variant="solid" />
+                  {' icon in the navbar below to get started.'}
+                </span>
+              </>
+            </ImageAndText>
           ) : null}
           {filteredTasks.top.length > 0 ? (
             <CollapsibleContent
