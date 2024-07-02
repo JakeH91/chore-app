@@ -10,6 +10,7 @@
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 @layer utilities {
