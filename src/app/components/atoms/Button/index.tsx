@@ -10,6 +10,7 @@ export const Button = ({
   className,
   title,
   type,
+  variant,
 }: {
   onClick?: () => void;
   href?: string;
@@ -19,11 +20,18 @@ export const Button = ({
   className?: string;
   title?: string;
   type?: 'submit' | 'reset' | 'button' | undefined;
+  variant?: 'primary' | 'secondary' | undefined;
 }) => {
   if (href) {
     return (
       <Link
-        className={`${className} border py-2 px-4 text-center rounded bg-green-500 text-white shadow active:shadow-inner active:bg-green-600`}
+        className={`${
+          className ? className + ' ' : ''
+        }border py-2 px-4 text-center rounded ${
+          variant === 'secondary'
+            ? 'bg-white text-black active:bg-gray-100'
+            : 'bg-green-500 text-white active:bg-green-600'
+        } shadow active:shadow-inner`}
         href={href}
       >
         {children}

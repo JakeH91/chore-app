@@ -1,13 +1,14 @@
 'use server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { prisma } from '@lib/prisma';
+import { redirect } from 'next/navigation';
 
 export const createHousehold = async (formData: FormData) => {
   const session = await getSession();
 
   if (session && session.user) {
     const householdData = Object.fromEntries(formData);
-    return await prisma.household.create({
+    await prisma.household.create({
       data: {
         address: String(householdData.address),
         name: String(householdData.name),
@@ -20,6 +21,8 @@ export const createHousehold = async (formData: FormData) => {
   } else {
     throw new Error('Must be logged in to create household');
   }
+
+  redirect('/households');
 };
 
 export const readHouseholds = async () => {

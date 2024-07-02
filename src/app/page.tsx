@@ -11,21 +11,26 @@ import { PageHeading } from '@app/components/atoms/PageHeading';
 import { PageContent } from '@app/components/atoms/PageContent';
 import { Icon } from '@app/components/atoms/Icon';
 import { ImageAndText } from '@app/components/molecules/ImageAndText';
+import { useRouter } from 'next/navigation';
 
 export const Home = () => {
   const { user, error, isLoading } = useUser();
-  const [households, setHouseholds] = useState<Household[]>();
+  const [households, setHouseholds] = useState<Household[]>([]);
   const [tasks, setTasks] = useState<Task[]>();
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchHouseholds() {
       if (user) {
         const fetchedHouseholds = await readHouseholds();
+        if (fetchedHouseholds?.length === 0) {
+          return router.push('/households');
+        }
         setHouseholds(fetchedHouseholds);
       }
     }
     fetchHouseholds();
-  }, [user]);
+  }, [user, router]);
 
   useEffect(() => {
     async function fetchTasks(households: Household[] | undefined) {
@@ -79,7 +84,7 @@ export const Home = () => {
     return <h1>SOMETHING WENT WRONG!!</h1>;
   }
 
-  if (isLoading) {
+  if (isLoading || households.length === 0) {
     return <p>Loading...</p>;
   }
 

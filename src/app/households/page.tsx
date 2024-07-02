@@ -1,12 +1,10 @@
 'use client';
-import {
-  createHousehold,
-  joinHousehold,
-  readHouseholds,
-} from '@app/actions/database/household';
+import { readHouseholds } from '@app/actions/database/household';
 import React, { useEffect, useState } from 'react';
 import { PageHeading } from '@app/components/atoms/PageHeading';
 import { PageContent } from '@app/components/atoms/PageContent';
+import { ImageAndText } from '@app/components/molecules/ImageAndText';
+import { Button } from '@app/components/atoms/Button';
 
 export const Households = () => {
   const [households, setHouseholds] = useState<
@@ -17,22 +15,45 @@ export const Households = () => {
       address: string;
       userId: string;
     }[]
-  >();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleFormSubmit = () => {
-    setIsSubmitting(true);
-  };
+  >([]);
 
   useEffect(() => {
     async function fetchHouseholds() {
       const fetchedHouseholds = await readHouseholds();
       setHouseholds(fetchedHouseholds);
-      setIsSubmitting(false);
     }
 
     fetchHouseholds();
-  }, [isSubmitting]);
+  }, []);
+
+  if (households.length === 0) {
+    return (
+      <PageContent className="h-screen pb-6">
+        <div className="flex flex-col h-full relative justify-between">
+          <ImageAndText imgSrc="/household.jpg" imgAltText="A tidy living room">
+            <>
+              <span className="block w-100 text-justify">
+                {
+                  'This app is all about better managing your household, whether you live alone, or squat with a horde of angry meth addicts.'
+                }
+              </span>
+              <span className="block w-100 text-justify mt-4">
+                {
+                  "Whatever your living condition - hey, I'm not judging - you may as well start with setting up your household (or joining one if it's already been added)."
+                }
+              </span>
+            </>
+          </ImageAndText>
+          <div className="flex flex-col gap-2">
+            <Button href="/households/join">{'JOIN HOUSEHOLD'}</Button>
+            <Button variant="secondary" href="/households/create">
+              {'CREATE HOUSEHOLD'}
+            </Button>
+          </div>
+        </div>
+      </PageContent>
+    );
+  }
 
   return (
     <>
@@ -60,62 +81,6 @@ export const Households = () => {
               })}
             </div>
           ) : null}
-          <div className="mb-8">
-            <h2>Join Existing Household?</h2>
-            <form
-              className="flex flex-row items-center gap-4"
-              action={async (formData) => {
-                await joinHousehold(formData);
-              }}
-            >
-              <label htmlFor="joiningCode">Code:</label>
-              <input
-                className="border"
-                type="text"
-                id="joiningCode"
-                name="joiningCode"
-                required
-              />
-              <button
-                className="w-max self-end py-2 px-4 border rounded text-sm text-white bg-green-600"
-                type="submit"
-                onClick={handleFormSubmit}
-              >
-                Join
-              </button>
-            </form>
-          </div>
-          <div className="mb-8">
-            <h2>Create New Household?</h2>
-            <form
-              className="flex flex-row items-center gap-4"
-              action={createHousehold}
-            >
-              <label htmlFor="name">Name:</label>
-              <input
-                className="border"
-                type="text"
-                id="name"
-                name="name"
-                required
-              />
-              <label htmlFor="address">Address:</label>
-              <input
-                className="border"
-                type="text"
-                id="address"
-                name="address"
-                required
-              />
-              <button
-                className="w-max self-end py-2 px-4 border rounded text-sm text-white bg-green-600"
-                type="submit"
-                onClick={handleFormSubmit}
-              >
-                Create
-              </button>
-            </form>
-          </div>
         </>
       </PageContent>
     </>
