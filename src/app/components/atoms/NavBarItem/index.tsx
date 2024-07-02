@@ -7,7 +7,7 @@ export const NavBarItem = ({
   children,
 }: {
   href: string;
-  children: string;
+  children: string | React.ReactElement;
 }) => {
   const path = usePathname();
   const subDirectory = path.split('/')[1];
@@ -15,9 +15,9 @@ export const NavBarItem = ({
 
   return (
     <Link
-      className={`p-4 w-full bg-opacity-70 rounded ${
-        selected ? 'bg-sky-600' : 'hover:bg-gray-200'
-      } hover:bg-opacity-80`}
+      className={`p-4 md:w-full md:bg-opacity-70 rounded ${
+        selected ? 'md:bg-sky-600' : 'md:hover:bg-gray-200'
+      } md:hover:bg-opacity-80`}
       href={href}
     >
       {children}

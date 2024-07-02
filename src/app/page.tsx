@@ -7,6 +7,8 @@ import { TableTask } from '@app/components/molecules/TableTask';
 import { CollapsibleContent } from '@app/components/organisms/CollapsibleContent';
 import { readHouseholds } from '@app/actions/database/household';
 import { Household, Task } from '@prisma/client';
+import { PageHeading } from '@app/components/atoms/PageHeading';
+import { PageContent } from '@app/components/atoms/PageContent';
 
 export const Home = () => {
   const { user, error, isLoading } = useUser();
@@ -85,64 +87,68 @@ export const Home = () => {
 
   return (
     <>
-      <h1 className="mb-6">Your tasks</h1>
-      {noTasks ? <p>No tasks this week!</p> : null}
-      {filteredTasks.top.length > 0 ? (
-        <CollapsibleContent
-          variant="red"
-          isShowing
-          title={`Top Priority: ${filteredTasks.top.length}`}
-        >
-          <table>
-            <tbody>
-              {filteredTasks.top.map((task) => {
-                return <TableTask key={task.id} task={task} noDate />;
-              })}
-            </tbody>
-          </table>
-        </CollapsibleContent>
-      ) : null}
-      {filteredTasks.high.length > 0 ? (
-        <CollapsibleContent
-          variant="yellow"
-          title={`High Priority: ${filteredTasks.high.length}`}
-        >
-          <table>
-            <tbody>
-              {filteredTasks.high.map((task) => {
-                return <TableTask key={task.id} task={task} noDate />;
-              })}
-            </tbody>
-          </table>
-        </CollapsibleContent>
-      ) : null}
-      {filteredTasks.low.length > 0 ? (
-        <CollapsibleContent
-          variant="green"
-          title={`Low Priority: ${filteredTasks.low.length}`}
-        >
-          <table>
-            <tbody>
-              {filteredTasks.low.map((task) => {
-                return <TableTask key={task.id} task={task} noDate />;
-              })}
-            </tbody>
-          </table>
-        </CollapsibleContent>
-      ) : null}
-      {filteredTasks.coming_up.length > 0 ? (
-        <CollapsibleContent
-          title={`Coming Up: ${filteredTasks.coming_up.length}`}
-        >
-          <table>
-            <tbody>
-              {filteredTasks.coming_up.map((task) => {
-                return <TableTask key={task.id} task={task} />;
-              })}
-            </tbody>
-          </table>
-        </CollapsibleContent>
-      ) : null}
+      <PageHeading>{'Home'}</PageHeading>
+      <PageContent>
+        <>
+          {noTasks ? <p>No tasks this week!</p> : null}
+          {filteredTasks.top.length > 0 ? (
+            <CollapsibleContent
+              variant="red"
+              isShowing
+              title={`Top Priority: ${filteredTasks.top.length}`}
+            >
+              <table>
+                <tbody>
+                  {filteredTasks.top.map((task) => {
+                    return <TableTask key={task.id} task={task} noDate />;
+                  })}
+                </tbody>
+              </table>
+            </CollapsibleContent>
+          ) : null}
+          {filteredTasks.high.length > 0 ? (
+            <CollapsibleContent
+              variant="yellow"
+              title={`High Priority: ${filteredTasks.high.length}`}
+            >
+              <table>
+                <tbody>
+                  {filteredTasks.high.map((task) => {
+                    return <TableTask key={task.id} task={task} noDate />;
+                  })}
+                </tbody>
+              </table>
+            </CollapsibleContent>
+          ) : null}
+          {filteredTasks.low.length > 0 ? (
+            <CollapsibleContent
+              variant="green"
+              title={`Low Priority: ${filteredTasks.low.length}`}
+            >
+              <table>
+                <tbody>
+                  {filteredTasks.low.map((task) => {
+                    return <TableTask key={task.id} task={task} noDate />;
+                  })}
+                </tbody>
+              </table>
+            </CollapsibleContent>
+          ) : null}
+          {filteredTasks.coming_up.length > 0 ? (
+            <CollapsibleContent
+              title={`Coming Up: ${filteredTasks.coming_up.length}`}
+            >
+              <table>
+                <tbody>
+                  {filteredTasks.coming_up.map((task) => {
+                    return <TableTask key={task.id} task={task} />;
+                  })}
+                </tbody>
+              </table>
+            </CollapsibleContent>
+          ) : null}
+        </>
+      </PageContent>
     </>
   );
 };

@@ -2,7 +2,7 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { NavBarItem } from '@app/components/atoms/NavBarItem';
 
-export const NavBar = () => {
+export const NavBarDesktop = () => {
   const { user, isLoading } = useUser();
 
   return (

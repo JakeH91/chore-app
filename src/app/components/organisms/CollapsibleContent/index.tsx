@@ -34,7 +34,7 @@ export const CollapsibleContent = ({
   };
 
   return (
-    <div className="w-1/2 mb-3">
+    <div className="w-full mb-3 md:w-1/2 ">
       <div
         className={`w-full ${color[variant].background} rounded-t p-2 cursor-pointer flex flex-row items-center justify-between`}
         onClick={() => setIsShowingDropdown((current) => !current)}
