@@ -30,7 +30,7 @@ export default async function RootLayout({
           <body>
             <Profile />
             <div className={`flex flex-col h-screen relative justify-between`}>
-              <main className="flex flex-col relative">
+              <main className="flex flex-col relative h-full">
                 {isLoggedIn ? children : <Login />}
               </main>
               <NavBarMobile />

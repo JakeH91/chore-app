@@ -39,7 +39,18 @@ export const Button = ({
     );
   }
   return (
-    <button className={className} onClick={onClick} type={type} title={title}>
+    <button
+      className={`${
+        className ? className + ' ' : ''
+      }border py-2 px-4 text-center rounded ${
+        variant === 'secondary'
+          ? 'bg-white text-black active:bg-gray-100'
+          : 'bg-green-500 text-white active:bg-green-600'
+      } shadow active:shadow-inner`}
+      onClick={onClick}
+      type={type}
+      title={title}
+    >
       {icon ? (
         <Icon icon={icon} variant={selected ? 'solid' : 'regular'} />
       ) : null}

@@ -5,30 +5,37 @@ import { PageHeading } from '@app/components/atoms/PageHeading';
 import { PageContent } from '@app/components/atoms/PageContent';
 import { ImageAndText } from '@app/components/molecules/ImageAndText';
 import { Button } from '@app/components/atoms/Button';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export const Households = () => {
+  const { user, isLoading } = useUser();
   const [households, setHouseholds] = useState<
-    {
-      id: number;
-      joiningCode: string;
-      name: string;
-      address: string;
-      userId: string;
-    }[]
-  >([]);
+    | {
+        id: number;
+        joiningCode: string;
+        name: string;
+        address: string;
+        userId: string;
+      }[]
+    | undefined
+  >(undefined);
 
   useEffect(() => {
     async function fetchHouseholds() {
-      const fetchedHouseholds = await readHouseholds();
-      setHouseholds(fetchedHouseholds);
+      if (user) {
+        const fetchedHouseholds = await readHouseholds();
+        setHouseholds(fetchedHouseholds);
+      }
     }
 
     fetchHouseholds();
-  }, []);
+  }, [user]);
 
-  if (households.length === 0) {
+  if (isLoading || !user || !households) return <p>Loading...</p>;
+
+  if (households && households.length === 0) {
     return (
-      <PageContent className="h-screen pb-6">
+      <PageContent>
         <div className="flex flex-col h-full relative justify-between">
           <ImageAndText imgSrc="/household.jpg" imgAltText="A tidy living room">
             <>
