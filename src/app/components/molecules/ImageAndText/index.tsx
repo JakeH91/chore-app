@@ -10,8 +10,8 @@ export const ImageAndText = ({
   children: React.ReactElement;
 }) => {
   return (
-    <div className="relative h-[70vh]">
-      <div className="w-full relative h-1/2 overflow-hidden">
+    <div className="relative">
+      <div className="w-full relative h-[35vh] overflow-hidden">
         <Image className="pb-8" src={imgSrc} alt={imgAltText} fill />
       </div>
       {children}
