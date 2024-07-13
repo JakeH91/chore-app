@@ -188,36 +188,52 @@ export const readProjects = async (households?: Household[]) => {
   }
 };
 
-export const updateTask = async (taskId: number, formData: FormData) => {
+export type FormTask = {
+  id: string;
+  name: string | null;
+  dueDate: string | null;
+  repeating: string;
+  parentId: string | null;
+  access: string;
+  frequency: string | null;
+  householdId: string | null;
+};
+
+export const updateTask = async (
+  task: Partial<Task> & { access?: string | number | null }
+) => {
   const session = await getSession();
 
   if (session && session.user) {
-    const taskData = Object.fromEntries(formData);
-    const isRepeating = taskData.repeating === 'true';
-    const task: Omit<Task, 'id' | 'userId'> = {
-      name: String(taskData.name),
+    const isRepeating = Boolean(task.repeating);
+    const formattedTask: Omit<Task, 'userId'> = {
+      id: task.id!,
+      name: task.name ? String(task.name) : null,
       dueDate: isRepeating
         ? null
-        : String(taskData.dueDate).length > 0
-        ? new Date(String(taskData.dueDate))
+        : task.dueDate && String(task.dueDate).length > 0
+        ? new Date(String(task.dueDate))
         : null,
       repeating: isRepeating,
-      householdId: String(taskData.access) === 'self' ? null : +taskData.access,
-      parentId: taskData.parentId ? +taskData.parentId : null,
-      frequency: isRepeating && taskData.frequency ? +taskData.frequency : null,
+      householdId: task.access
+        ? String(task.access) === 'self'
+          ? null
+          : +task.access
+        : null,
+      parentId: task.parentId ? +task.parentId : null,
+      frequency: isRepeating && task.frequency ? +task.frequency : null,
     };
-
     return await prisma.task.update({
       where: {
-        id: taskId,
+        id: formattedTask.id,
       },
       data: {
-        name: task.name,
-        dueDate: task.dueDate,
-        repeating: task.repeating,
-        frequency: task.frequency,
-        householdId: task.householdId,
-        parentId: task.parentId,
+        name: formattedTask.name,
+        dueDate: formattedTask.dueDate,
+        repeating: formattedTask.repeating,
+        frequency: formattedTask.frequency,
+        householdId: formattedTask.householdId,
+        parentId: formattedTask.parentId,
         userId: session.user.sub,
       },
     });
