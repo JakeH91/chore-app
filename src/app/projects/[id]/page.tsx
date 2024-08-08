@@ -6,8 +6,11 @@ import { Household, Task } from '@prisma/client';
 import { readTask, updateTask } from '@app/actions/database/task';
 import { readHouseholds } from '@app/actions/database/household';
 import { InputChangeDelay } from '@app/components/molecules/InputChangeDelay';
+import { Button } from '@src/app/components/atoms/Button';
+import { useRouter } from 'next/navigation';
 
 export const Project = ({ params }: { params: { id: string } }) => {
+  const router = useRouter();
   const [updatedTask, setUpdatedTask] = useState<
     (Partial<Task> & { access?: string | number | null }) | null
   >({
@@ -92,7 +95,16 @@ export const Project = ({ params }: { params: { id: string } }) => {
       <PageHeading>{'Projects'}</PageHeading>
       <PageContent>
         <div className="flex flex-col">
-          <span className="mb-4">Project Id: {params.id}</span>
+          <Button
+            className="w-fit mb-6"
+            size="small"
+            variant="secondary"
+            icon={'faChevronLeft'}
+            iconVariant="solid"
+            onClick={() => router.back()}
+          >
+            {' Back'}
+          </Button>
           <form>
             <fieldset className="flex flex-col">
               <label htmlFor="name">Task Name:</label>

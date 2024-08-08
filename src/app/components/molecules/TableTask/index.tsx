@@ -7,10 +7,12 @@ export const TableTask = ({
   task,
   handleClick,
   noDate,
+  moreInfo,
 }: {
   task: Task & { parentTask?: Task; subtasks?: Task[] };
   handleClick?: (taskId: number) => void;
   noDate?: boolean;
+  moreInfo?: boolean;
 }) => {
   const [completed, setCompleted] = useState<{
     mainTask: boolean;
@@ -24,7 +26,9 @@ export const TableTask = ({
           <form action={completeTaskWithId}>
             <Button
               icon="faCircleCheck"
-              selected={completed.mainTask}
+              iconVariant={completed.mainTask ? 'solid' : 'regular'}
+              size="small"
+              variant="secondary"
               onClick={() =>
                 setCompleted((current) => {
                   return { ...current, mainTask: !current.mainTask };
@@ -35,10 +39,7 @@ export const TableTask = ({
             />
           </form>
         </td>
-        <td
-          className="px-4 pb-2"
-          onClick={() => (handleClick ? handleClick(task.id) : null)}
-        >
+        <td className="px-4 pb-2 w-full">
           {task.name} {task.parentTask ? `(${task.parentTask.name})` : ''}
         </td>
         {noDate ? null : (
@@ -46,6 +47,17 @@ export const TableTask = ({
             {task.dueDate ? task.dueDate.toLocaleDateString() : ''}
           </td>
         )}
+        {moreInfo ? (
+          <td className="p-1 pb-2">
+            <Button
+              icon="faEllipsis"
+              iconVariant="solid"
+              size="small"
+              variant="secondary"
+              href={`/${task.repeating ? 'chores' : 'projects'}/${task.id}`}
+            />
+          </td>
+        ) : null}
       </tr>
       {task.subtasks?.map((subtask) => {
         const completeSubtaskWithId = completeTask.bind(null, subtask.id);
@@ -59,7 +71,7 @@ export const TableTask = ({
                 <Button
                   className="pl-4"
                   icon="faCircleCheck"
-                  selected={completed[subtask.id]}
+                  iconVariant={completed[subtask.id] ? 'solid' : 'regular'}
                   onClick={() =>
                     setCompleted((current) => {
                       return { ...current, [subtask.id]: !current[subtask.id] };

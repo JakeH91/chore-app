@@ -11,7 +11,6 @@ export const InfoBar = ({
     <div className="w-1/3 border p-8 -m-8 h-screen min-w-80 flex flex-col">
       <Button
         className="self-end"
-        selected
         icon="faXmark"
         onClick={() => handleCloseClick()}
         title="close"

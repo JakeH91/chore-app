@@ -6,54 +6,57 @@ export const Button = ({
   href,
   children,
   icon,
-  selected,
+  iconVariant,
   className,
   title,
   type,
   variant,
+  size,
 }: {
   onClick?: () => void;
   href?: string;
   children?: string;
   icon?: string;
-  selected?: boolean;
+  iconVariant?: 'solid' | 'regular';
   className?: string;
   title?: string;
   type?: 'submit' | 'reset' | 'button' | undefined;
   variant?: 'primary' | 'secondary' | undefined;
+  size?: 'small' | 'medium';
 }) => {
   if (href) {
     return (
       <Link
-        className={`${
-          className ? className + ' ' : ''
-        }border py-2 px-4 text-center rounded ${
+        className={`${className ? className + ' ' : ''} ${
+          size === 'small'
+            ? 'p-0'
+            : 'border py-2 px-4 shadow active:shadow-inner'
+        } text-center rounded ${
           variant === 'secondary'
             ? 'bg-white text-black active:bg-gray-100'
             : 'bg-green-500 text-white active:bg-green-600'
-        } shadow active:shadow-inner`}
+        }`}
         href={href}
       >
-        {children}
+        {icon ? <Icon icon={icon} variant={iconVariant} /> : null}
+        {children ? children : null}
       </Link>
     );
   }
   return (
     <button
-      className={`${
-        className ? className + ' ' : ''
-      }border py-2 px-4 text-center rounded ${
+      className={`${className ? className + ' ' : ''} ${
+        size === 'small' ? 'p-0' : 'border py-2 px-4 shadow active:shadow-inner'
+      } text-center rounded ${
         variant === 'secondary'
           ? 'bg-white text-black active:bg-gray-100'
           : 'bg-green-500 text-white active:bg-green-600'
-      } shadow active:shadow-inner`}
+      }`}
       onClick={onClick}
       type={type}
       title={title}
     >
-      {icon ? (
-        <Icon icon={icon} variant={selected ? 'solid' : 'regular'} />
-      ) : null}
+      {icon ? <Icon icon={icon} variant={iconVariant} /> : null}
       {children ? children : null}
     </button>
   );

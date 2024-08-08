@@ -3,8 +3,6 @@ import { readProjects } from '@app/actions/database/task';
 import { useEffect, useState } from 'react';
 import { TableTask } from '@app/components/molecules/TableTask';
 import { Table } from '@app/components/molecules/Table';
-import { InfoBar } from '@app/components/organisms/InfoBar';
-import { TaskForm } from '@app/components/molecules/TaskForm';
 import { Household, Task } from '@prisma/client';
 import { readHouseholds } from '@app/actions/database/household';
 import { PageHeading } from '@app/components/atoms/PageHeading';
@@ -47,7 +45,7 @@ export const Projects = () => {
       <PageHeading>{'Projects'}</PageHeading>
       <PageContent>
         <>
-          <div className="w-fit">
+          <div className="w-full">
             {tasks && tasks.length === 0 ? (
               <>
                 <span className="block w-100 text-justify">
@@ -65,34 +63,21 @@ export const Projects = () => {
                 </span>
               </>
             ) : (
-              <Table title="tasks" headings={['', 'Project', 'Due Date']}>
+              <Table title="tasks" headings={['', 'Project', '']}>
                 {tasks?.map((task) => {
                   return (
                     <TableTask
                       key={task.id}
                       handleClick={handleTaskClick}
                       task={task}
-                      noDate={!task.dueDate}
+                      noDate
+                      moreInfo
                     />
                   );
                 })}
               </Table>
             )}
           </div>
-          {/* TODO: Refactor to handle all this with one InfoBar & TaskForm */}
-          {showAddNewSidebar ? (
-            <InfoBar handleCloseClick={() => setShowAddNewSidebar(false)}>
-              <TaskForm handleButtonClick={setCreatingTask} />
-            </InfoBar>
-          ) : null}
-          {editTaskId ? (
-            <InfoBar handleCloseClick={handleCloseSidebarClick}>
-              <TaskForm
-                handleButtonClick={setCreatingTask}
-                task={tasks?.find((task) => task.id === editTaskId)}
-              />
-            </InfoBar>
-          ) : null}
         </>
       </PageContent>
     </>
