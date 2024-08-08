@@ -12,7 +12,14 @@ export const Table = ({
       <thead>
         <tr>
           {headings.map((heading) => {
-            return <th key={`${title}-heading-${heading}`}>{heading}</th>;
+            return (
+              <th
+                className="px-4 pb-2 text-left"
+                key={`${title}-heading-${heading}`}
+              >
+                {heading}
+              </th>
+            );
           })}
         </tr>
       </thead>

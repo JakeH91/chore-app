@@ -3,18 +3,21 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { prisma } from '@lib/prisma';
 import { CompletionDetails, Household, Task } from '@prisma/client';
 import { addDays } from '@app/utils';
+import { redirect } from 'next/navigation';
 
 export const createTask = async (formData: FormData) => {
   const session = await getSession();
+  let createdTask: Task;
+  let isRepeating: boolean;
 
   if (session && session.user) {
     const taskData = Object.fromEntries(formData);
-    const isRepeating = taskData.repeating === 'true';
+    isRepeating = taskData.repeating === 'true';
     const task: Omit<Task, 'id' | 'userId'> = {
-      name: String(taskData.name),
+      name: taskData.name ? String(taskData.name) : null,
       dueDate: isRepeating
         ? null
-        : String(taskData.dueDate).length > 0
+        : taskData.dueDate && String(taskData.dueDate).length > 0
         ? new Date(String(taskData.dueDate))
         : null,
       repeating: isRepeating,
@@ -23,7 +26,7 @@ export const createTask = async (formData: FormData) => {
       frequency: isRepeating && taskData.frequency ? +taskData.frequency : null,
     };
 
-    return await prisma.task.create({
+    createdTask = await prisma.task.create({
       data: {
         name: task.name,
         dueDate: task.dueDate,
@@ -37,6 +40,8 @@ export const createTask = async (formData: FormData) => {
   } else {
     throw new Error('Must be logged in to create task');
   }
+
+  redirect(`${isRepeating ? '/chores/' : '/projects/'}${createdTask.id}`);
 };
 
 export const readTask = async (taskId: number) => {
@@ -183,36 +188,52 @@ export const readProjects = async (households?: Household[]) => {
   }
 };
 
-export const updateTask = async (taskId: number, formData: FormData) => {
+export type FormTask = {
+  id: string;
+  name: string | null;
+  dueDate: string | null;
+  repeating: string;
+  parentId: string | null;
+  access: string;
+  frequency: string | null;
+  householdId: string | null;
+};
+
+export const updateTask = async (
+  task: Partial<Task> & { access?: string | number | null }
+) => {
   const session = await getSession();
 
   if (session && session.user) {
-    const taskData = Object.fromEntries(formData);
-    const isRepeating = taskData.repeating === 'true';
-    const task: Omit<Task, 'id' | 'userId'> = {
-      name: String(taskData.name),
+    const isRepeating = Boolean(task.repeating);
+    const formattedTask: Omit<Task, 'userId'> = {
+      id: task.id!,
+      name: task.name ? String(task.name) : null,
       dueDate: isRepeating
         ? null
-        : String(taskData.dueDate).length > 0
-        ? new Date(String(taskData.dueDate))
+        : task.dueDate && String(task.dueDate).length > 0
+        ? new Date(String(task.dueDate))
         : null,
       repeating: isRepeating,
-      householdId: String(taskData.access) === 'self' ? null : +taskData.access,
-      parentId: taskData.parentId ? +taskData.parentId : null,
-      frequency: isRepeating && taskData.frequency ? +taskData.frequency : null,
+      householdId: task.access
+        ? String(task.access) === 'self'
+          ? null
+          : +task.access
+        : null,
+      parentId: task.parentId ? +task.parentId : null,
+      frequency: isRepeating && task.frequency ? +task.frequency : null,
     };
-
     return await prisma.task.update({
       where: {
-        id: taskId,
+        id: formattedTask.id,
       },
       data: {
-        name: task.name,
-        dueDate: task.dueDate,
-        repeating: task.repeating,
-        frequency: task.frequency,
-        householdId: task.householdId,
-        parentId: task.parentId,
+        name: formattedTask.name,
+        dueDate: formattedTask.dueDate,
+        repeating: formattedTask.repeating,
+        frequency: formattedTask.frequency,
+        householdId: formattedTask.householdId,
+        parentId: formattedTask.parentId,
         userId: session.user.sub,
       },
     });

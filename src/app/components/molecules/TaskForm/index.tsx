@@ -135,7 +135,7 @@ function Form({
             id="name"
             name="name"
             required
-            defaultValue={task?.name}
+            defaultValue={task?.name ? String(task.name) : undefined}
           />
         </fieldset>
         {isRepeatingTask ? (
