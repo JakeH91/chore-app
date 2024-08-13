@@ -30,7 +30,7 @@ export const InputChangeDelay = ({
 
   return (
     <input
-      className={`${className ? className + ' ' : ''}border mb-4`}
+      className={`${className ? className + ' ' : ''}border`}
       type={type}
       id={id}
       name={name}

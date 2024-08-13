@@ -3,16 +3,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import { PageHeading } from '@app/components/atoms/PageHeading';
 import { PageContent } from '@app/components/atoms/PageContent';
 import { Household, Task } from '@prisma/client';
-import { readTask, updateTask } from '@app/actions/database/task';
+import { createTask, readTask, updateTask } from '@app/actions/database/task';
 import { readHouseholds } from '@app/actions/database/household';
 import { InputChangeDelay } from '@app/components/molecules/InputChangeDelay';
 import { Button } from '@src/app/components/atoms/Button';
 import { useRouter } from 'next/navigation';
+import { SubtaskBasicForm } from '@src/app/components/organisms/SubtaskBasicForm';
 
 export const Project = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const [updatedTask, setUpdatedTask] = useState<
-    (Partial<Task> & { access?: string | number | null }) | null
+    | (Partial<Task> & { access?: string | number | null; subtasks?: Task[] })
+    | null
   >({
     id: +params.id,
     name: null,
@@ -24,6 +26,7 @@ export const Project = ({ params }: { params: { id: string } }) => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [shouldWriteToDb, setShouldWriteToDb] = useState(false);
+  const [shouldRefetchParentTask, setShouldRefetchParentTask] = useState(false);
   const [households, setHouseholds] = useState<Household[]>();
 
   useEffect(() => {
@@ -42,11 +45,12 @@ export const Project = ({ params }: { params: { id: string } }) => {
         access:
           fetchedTask?.householdId === null ? 'self' : fetchedTask?.householdId,
       });
+      setShouldRefetchParentTask(false);
       setIsLoading(false);
     }
 
     fetchTask(+params.id);
-  }, [params.id]);
+  }, [params.id, shouldRefetchParentTask]);
 
   useEffect(() => {
     async function updateTaskFunc(
@@ -109,6 +113,7 @@ export const Project = ({ params }: { params: { id: string } }) => {
             <fieldset className="flex flex-col">
               <label htmlFor="name">Task Name:</label>
               <InputChangeDelay
+                className="mb-4"
                 id="name"
                 name="name"
                 timeoutTracker={timeoutTracker.current}
@@ -123,6 +128,7 @@ export const Project = ({ params }: { params: { id: string } }) => {
                 When should this task be completed?
               </label>
               <InputChangeDelay
+                className="mb-4"
                 id="dueDate"
                 name="dueDate"
                 type="date"
@@ -159,13 +165,37 @@ export const Project = ({ params }: { params: { id: string } }) => {
                 </select>
               </fieldset>
             ) : null}
+            {updatedTask?.parentId ? (
+              <input
+                type="hidden"
+                name="parentId"
+                value={updatedTask.parentId}
+              />
+            ) : null}
           </form>
+          <div className="flex flex-col w-full mt-4">
+            <span>Subtasks?</span>
+            <table>
+              <tbody>
+                {updatedTask?.subtasks?.map((task) => {
+                  return (
+                    <SubtaskBasicForm key={`subtask-${task.id}`} task={task} />
+                  );
+                })}
+              </tbody>
+            </table>
+            <form className="flex self-center" action={createTask}>
+              <input type="hidden" name="parentId" value={updatedTask?.id} />
+              <Button
+                type="submit"
+                variant="secondary"
+                onClick={() => setShouldRefetchParentTask(true)}
+              >
+                +
+              </Button>
+            </form>
+          </div>
         </div>
-        {/* 
-        {parentId ? (
-          <input type="hidden" name="parentId" value={parentId} />
-        ) : null}
-        */}
       </PageContent>
     </>
   );

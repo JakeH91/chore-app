@@ -9,9 +9,7 @@ import { PageHeading } from '@app/components/atoms/PageHeading';
 import { PageContent } from '@app/components/atoms/PageContent';
 
 export const Projects = () => {
-  const [showAddNewSidebar, setShowAddNewSidebar] = useState(false);
   const [creatingTask, setCreatingTask] = useState(false);
-  const [editTaskId, setEditTaskId] = useState<number | undefined>(0);
   const [households, setHouseholds] = useState<Household[]>();
   const [tasks, setTasks] = useState<Task[]>();
 
@@ -31,14 +29,6 @@ export const Projects = () => {
     }
     fetchTasks(households);
   }, [creatingTask, households]);
-
-  const handleTaskClick = (taskId: number) => {
-    setEditTaskId(taskId);
-  };
-
-  const handleCloseSidebarClick = () => {
-    setEditTaskId(undefined);
-  };
 
   return (
     <>
@@ -66,13 +56,7 @@ export const Projects = () => {
               <Table title="tasks" headings={['', 'Project', '']}>
                 {tasks?.map((task) => {
                   return (
-                    <TableTask
-                      key={task.id}
-                      handleClick={handleTaskClick}
-                      task={task}
-                      noDate
-                      moreInfo
-                    />
+                    <TableTask key={task.id} task={task} noDate moreInfo />
                   );
                 })}
               </Table>
