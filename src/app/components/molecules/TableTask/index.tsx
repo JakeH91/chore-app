@@ -69,9 +69,10 @@ export const TableTask = ({
             <td className="p-1 pb-2">
               <form action={completeSubtaskWithId}>
                 <Button
-                  className="pl-4"
                   icon="faCircleCheck"
                   iconVariant={completed[subtask.id] ? 'solid' : 'regular'}
+                  size="small"
+                  variant="secondary"
                   onClick={() =>
                     setCompleted((current) => {
                       return { ...current, [subtask.id]: !current[subtask.id] };
@@ -88,11 +89,17 @@ export const TableTask = ({
             >
               {subtask.name}
             </td>
-            {!subtask.dueDate ? null : (
-              <td className="px-4 pb-2">
-                {subtask.dueDate ? subtask.dueDate.toLocaleDateString() : ''}
-              </td>
-            )}
+            <td className="p-1 pb-2">
+              <Button
+                icon="faEllipsis"
+                iconVariant="solid"
+                size="small"
+                variant="secondary"
+                href={`/${task.repeating ? 'chores' : 'projects'}/${
+                  subtask.id
+                }`}
+              />
+            </td>
           </tr>
         );
       })}

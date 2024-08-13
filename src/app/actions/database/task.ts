@@ -4,14 +4,15 @@ import { prisma } from '@lib/prisma';
 import { CompletionDetails, Household, Task } from '@prisma/client';
 import { addDays } from '@app/utils';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 export const createTask = async (formData: FormData) => {
   const session = await getSession();
   let createdTask: Task;
   let isRepeating: boolean;
+  const taskData = Object.fromEntries(formData);
 
   if (session && session.user) {
-    const taskData = Object.fromEntries(formData);
     isRepeating = taskData.repeating === 'true';
     const task: Omit<Task, 'id' | 'userId'> = {
       name: taskData.name ? String(taskData.name) : null,
@@ -41,7 +42,9 @@ export const createTask = async (formData: FormData) => {
     throw new Error('Must be logged in to create task');
   }
 
-  redirect(`${isRepeating ? '/chores/' : '/projects/'}${createdTask.id}`);
+  taskData.parentId
+    ? null
+    : redirect(`${isRepeating ? '/chores/' : '/projects/'}${createdTask.id}`);
 };
 
 export const readTask = async (taskId: number) => {
@@ -52,6 +55,9 @@ export const readTask = async (taskId: number) => {
       where: {
         id: taskId,
         userId: session.user.sub,
+      },
+      include: {
+        subtasks: true,
       },
     });
 
