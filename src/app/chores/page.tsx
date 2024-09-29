@@ -8,7 +8,7 @@ import { readHouseholds } from '@app/actions/database/household';
 import { PageContent } from '@app/components/atoms/PageContent';
 import { PageHeading } from '@app/components/atoms/PageHeading';
 
-export const Chores = () => {
+const Chores = () => {
   const [showAddNewSidebar, setShowAddNewSidebar] = useState(false);
   const [creatingTask, setCreatingTask] = useState(false);
   const [editTaskId, setEditTaskId] = useState<number | undefined>(0);

@@ -14,9 +14,14 @@ export const Profile = () => {
     email: string;
   } | null>();
 
+  console.log('authUser:', authUser);
+  console.log('error:', error);
+  console.log('databaseUser:', databaseUser);
+
   useEffect(() => {
     async function fetchUser() {
       const user = await readDatabaseUser(authUser?.sub!);
+      console.log('USER AFTER READING:', user);
       setDatabaseUser(user);
     }
     if (authUser) {
