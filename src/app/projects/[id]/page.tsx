@@ -10,7 +10,7 @@ import { Button } from '@src/app/components/atoms/Button';
 import { useRouter } from 'next/navigation';
 import { SubtaskBasicForm } from '@src/app/components/organisms/SubtaskBasicForm';
 
-export const Project = ({ params }: { params: { id: string } }) => {
+const Project = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const [updatedTask, setUpdatedTask] = useState<
     | (Partial<Task> & { access?: string | number | null; subtasks?: Task[] })

@@ -13,7 +13,7 @@ import { Icon } from '@app/components/atoms/Icon';
 import { ImageAndText } from '@app/components/molecules/ImageAndText';
 import { useRouter } from 'next/navigation';
 
-export const Home = () => {
+const Home = () => {
   const { user, error, isLoading } = useUser();
   const [households, setHouseholds] = useState<Household[]>([]);
   const [tasks, setTasks] = useState<Task[]>();
