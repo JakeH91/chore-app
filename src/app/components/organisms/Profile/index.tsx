@@ -1,9 +1,12 @@
 'use client';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useEffect, useState } from 'react';
-import { addUserToDatabase, fetchUserFromDatabase } from '../actions/database';
+import {
+  createDatabaseUser,
+  readDatabaseUser,
+} from '@app/actions/database/user';
 
-export default function Profile() {
+export const Profile = () => {
   const { user: authUser, error, isLoading } = useUser();
   const [databaseUser, setDatabaseUser] = useState<{
     id: string;
@@ -13,21 +16,18 @@ export default function Profile() {
 
   useEffect(() => {
     async function fetchUser() {
-      const user = await fetchUserFromDatabase(authUser?.sub!);
+      const user = await readDatabaseUser(authUser?.sub!);
       setDatabaseUser(user);
-      console.log('user:', user);
     }
     if (authUser) {
       fetchUser();
     }
   }, [authUser]);
 
-  console.log('auth user:', authUser);
-
   useEffect(() => {
     (async () => {
       if (databaseUser === null && authUser?.sub && !isLoading && !error) {
-        await addUserToDatabase({
+        await createDatabaseUser({
           userId: authUser.sub,
           name: authUser.name!,
           email: authUser.email!,
@@ -36,9 +36,5 @@ export default function Profile() {
     })();
   }, [databaseUser, authUser, isLoading, error]);
 
-  if (isLoading) {
-    return <p>{'Fetching User...'}</p>;
-  }
-
   return null;
-}
+};
