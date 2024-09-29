@@ -6,6 +6,7 @@ export const createDatabaseUser = async (user: {
   name: string;
   email: string;
 }) => {
+  console.log('attempting to createDatabaseUser');
   await prisma.user.create({
     data: {
       id: user.userId,
@@ -16,6 +17,7 @@ export const createDatabaseUser = async (user: {
 };
 
 export const readDatabaseUser = async (userId: string) => {
+  console.log('attempting to readDatabaseUser');
   const user = await prisma.user.findUnique({
     where: {
       id: userId,

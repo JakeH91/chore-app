@@ -8,7 +8,7 @@ import { readHouseholds } from '@app/actions/database/household';
 import { Button } from '@src/app/components/atoms/Button';
 import { useRouter } from 'next/navigation';
 
-export const Chore = ({ params }: { params: { id: string } }) => {
+const Chore = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const [updatedTask, setUpdatedTask] = useState<
     (Partial<Task> & { access?: string | number | null }) | null

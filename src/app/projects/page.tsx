@@ -8,7 +8,7 @@ import { readHouseholds } from '@app/actions/database/household';
 import { PageHeading } from '@app/components/atoms/PageHeading';
 import { PageContent } from '@app/components/atoms/PageContent';
 
-export const Projects = () => {
+const Projects = () => {
   const [creatingTask, setCreatingTask] = useState(false);
   const [households, setHouseholds] = useState<Household[]>();
   const [tasks, setTasks] = useState<Task[]>();

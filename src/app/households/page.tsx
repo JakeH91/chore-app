@@ -7,7 +7,7 @@ import { ImageAndText } from '@app/components/molecules/ImageAndText';
 import { Button } from '@app/components/atoms/Button';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
-export const Households = () => {
+const Households = () => {
   const { user, isLoading } = useUser();
   const [households, setHouseholds] = useState<
     | {

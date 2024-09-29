@@ -7,7 +7,7 @@ import { ImageAndText } from '@app/components/molecules/ImageAndText';
 import Link from 'next/link';
 import { Button } from '@app/components/atoms/Button';
 
-export const CreateHousehold = () => {
+const CreateHousehold = () => {
   return (
     <>
       <PageHeading>{'Households'}</PageHeading>
