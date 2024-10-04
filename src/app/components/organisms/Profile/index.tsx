@@ -31,7 +31,9 @@ export const Profile = () => {
 
   useEffect(() => {
     (async () => {
+      console.log('outside');
       if (databaseUser === null && authUser?.sub && !isLoading && !error) {
+        console.log('server side user creation attempt');
         await createDatabaseUser({
           userId: authUser.sub,
           name: authUser.name!,
