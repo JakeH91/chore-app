@@ -1,7 +1,7 @@
 steps:
   - name: gcr.io/cloud-builders/docker
     entrypoint: bash
-        args:
+    args:
       - '-c'
       - |
         docker build \
@@ -32,6 +32,7 @@ images:
   - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
 options:
   substitutionOption: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
 substitutions:
   _SERVICE_NAME: chore-app
   _LABELS: gcb-trigger-id=a6fd1e15-ded6-46a8-8932-532b4e0b7c41

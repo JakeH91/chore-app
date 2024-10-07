@@ -40,16 +40,16 @@ const Projects = () => {
               <>
                 <span className="block w-100 text-justify">
                   {
-                    "Sometimes, when you finish a task, it's done forever. Good job, we can all go home. Sometimes, though, it comes back. Again, and again, and again."
+                    "Sometimes, a task just needs to get done, and then it's done. No repeating, no fussing about."
                   }
                 </span>
                 <span className="block w-100 text-justify mt-4">
                   {
-                    'These sisyphean tasks we shall call "Chores". Awful though they might be, this app aims to remove the mental capacity needed to keep on top of it all.'
+                    'These tasks we shall call "Projects". They may have subtasks, or not. But once they are done, you can forget about them forever'
                   }
                 </span>
                 <span className="block w-100 text-justify mt-4">
-                  {'Click the + below to add a new chore.'}
+                  {'Click the + below to add a new project.'}
                 </span>
               </>
             ) : (
